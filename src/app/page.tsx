@@ -8,6 +8,7 @@ import { LuListChecks } from "react-icons/lu";
 import { IoNavigateOutline } from "react-icons/io5";
 import OrdersDashboard from "@/components/OrdersDashboard";
 import AddOrderModal from "@/components/AddOrderModal"; // Import the modal component
+import { Navbar1 } from "@/components/navbar1";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
@@ -60,60 +61,40 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <h1 className="text-2xl font-bold text-gray-900">
-              Merchant Dashboard
-            </h1>
-            <div className="flex space-x-4">
-              <button
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                // Open modal on click
-              >
-                + Add New Order
-              </button>
-              <button className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors">
-                View Past Orders
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
+      <Navbar1/>
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Section */}
-        <section className="mb-12 max-w-7xl flex gap-4">
-          <div className="w-1/2 px-4 sm:px-6 lg:px-8 bg-white shadow-lg rounded-xl">
-            <div className="flex flex-col size-full justify-between items-center py-10">
-              <div className="">
+        <section className="mb-12 max-w-8xl flex gap-4">
+          <div className="w-3/5 px-4 sm:px-6 lg:px-8 bg-white shadow-lg rounded-xl">
+            <div className="flex flex-col size-full justify-between items-center py-4">
+              <div className="w-full">
                 <BlurText
-                  text="Welcome to Super Rider"
+                  text="Welcome to SuperRider! Add a new order below"
                   delay={150}
                   animateBy="words"
                   direction="top"
                   onAnimationComplete={handleAnimationComplete}
-                  className="text-4xl text-black font-bold mb-8"
+                  className="text-2xl text-black font-bold mb-8"
                   stepDuration={0.3}
                 />
               </div>
-              <div className="flex space-x-4">
+              <div className="flex justify-end space-x-4 w-full">
                 <button
                   className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
                   onClick={handleOpenModal}
                 >
                   <ListPlus className="w-6 h-6 inline-block mr-2" />
-                  Add New Order
+                  Add Order
                 </button>
-                <button className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center">
+                {/* <button className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center">
                   <LuListChecks className="w-6 h-6 inline-block mr-2" />
                   View Past Orders
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
-          <div className="max-w-1/2 w-full bg-white shadow-lg rounded-xl h-full mx-auto p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="max-w-2/5 w-full bg-white shadow-lg rounded-xl h-full mx-auto p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
             {/* Orders in the past week */}
             <div className="flex items-start gap-4 justify-center bg-blue-50 rounded-lg p-4 shadow">
               <div className="">
