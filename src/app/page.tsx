@@ -1,103 +1,187 @@
+"use client";
+import React, { useState } from "react";
 import Image from "next/image";
+import { Handshake, Clock, TrendingUp, XCircle } from "lucide-react";
+import BlurText from "@/components/ui/BlurText";
+import { ListPlus } from "lucide-react";
+import { LuListChecks } from "react-icons/lu";
+import { IoNavigateOutline } from "react-icons/io5";
+import OrdersDashboard from "@/components/OrdersDashboard";
+import AddOrderModal from "@/components/AddOrderModal"; // Import the modal component
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
+  // Mock data for demonstration
+  const activeOrders = [
+    {
+      id: "ORD-001",
+      customerName: "John Doe",
+      items: "2x Pizza, 1x Coke",
+      pickupTime: "2:30 PM",
+      deliveryAddress: "123 Main St",
+      status: "In Transit",
+    },
+    {
+      id: "ORD-002",
+      customerName: "Jane Smith",
+      items: "1x Burger Combo",
+      pickupTime: "3:15 PM",
+      deliveryAddress: "456 Oak Ave",
+      status: "Picked Up",
+    },
+  ];
+
+  const completedOrders = [
+    {
+      id: "ORD-003",
+      customerName: "Mike Johnson",
+      items: "3x Sandwiches",
+      completedTime: "Yesterday 6:45 PM",
+      deliveryAddress: "789 Pine St",
+      status: "Delivered",
+    },
+    {
+      id: "ORD-004",
+      customerName: "Sarah Wilson",
+      items: "1x Salad, 2x Drinks",
+      completedTime: "Yesterday 5:20 PM",
+      deliveryAddress: "321 Elm St",
+      status: "Delivered",
+    },
+  ];
+  const handleAnimationComplete = () => {
+    console.log("Animation completed!");
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <h1 className="text-2xl font-bold text-gray-900">
+              Merchant Dashboard
+            </h1>
+            <div className="flex space-x-4">
+              <button
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                // Open modal on click
+              >
+                + Add New Order
+              </button>
+              <button className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                View Past Orders
+              </button>
+            </div>
+          </div>
         </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Stats Section */}
+        <section className="mb-12 max-w-7xl flex gap-4">
+          <div className="w-1/2 px-4 sm:px-6 lg:px-8 bg-white shadow-lg rounded-xl">
+            <div className="flex flex-col size-full justify-between items-center py-10">
+              <div className="">
+                <BlurText
+                  text="Welcome to Super Rider"
+                  delay={150}
+                  animateBy="words"
+                  direction="top"
+                  onAnimationComplete={handleAnimationComplete}
+                  className="text-4xl text-black font-bold mb-8"
+                  stepDuration={0.3}
+                />
+              </div>
+              <div className="flex space-x-4">
+                <button
+                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
+                  onClick={handleOpenModal}
+                >
+                  <ListPlus className="w-6 h-6 inline-block mr-2" />
+                  Add New Order
+                </button>
+                <button className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center">
+                  <LuListChecks className="w-6 h-6 inline-block mr-2" />
+                  View Past Orders
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="max-w-1/2 w-full bg-white shadow-lg rounded-xl h-full mx-auto p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {/* Orders in the past week */}
+            <div className="flex items-start gap-4 justify-center bg-blue-50 rounded-lg p-4 shadow">
+              <div className="">
+                <TrendingUp className="w-14 h-14 text-blue-700 mb-2" />
+              </div>
+              <div className="flex flex-col items-start justify-center w-3/5">
+                <span className="text-5xl italic font-bold text-blue-700 text-left">
+                  128
+                </span>
+                <span className="text-sm mt-1 text-left text-blue-700 font-semibold">
+                  Orders in Past Week
+                </span>
+              </div>
+            </div>
+            {/* % Orders completed within SLA */}
+            <div className="flex items-start gap-4 justify-center bg-green-50 rounded-lg p-4 shadow">
+              <div className="">
+                <Handshake className="w-14 h-14 text-green-700 mb-2" />
+              </div>
+              <div className="flex flex-col items-start justify-center w-3/5">
+                <span className="text-5xl italic font-bold text-green-700 text-left">
+                  92%
+                </span>
+                <span className="text-sm mt-1 text-left text-green-700 font-semibold">
+                  Orders completed Within SLA
+                </span>
+              </div>
+            </div>
+            {/* Average Delivery Time */}
+            <div className="flex items-start gap-4 justify-center bg-yellow-50 rounded-lg p-4 shadow">
+              <div className="">
+                <Clock className="w-14 h-14 text-yellow-700 mb-2" />
+              </div>
+              <div className="flex flex-col items-start justify-center w-3/5">
+                <span className="text-5xl italic font-bold text-yellow-700 text-left">
+                  32
+                </span>
+                <span className="text-sm mt-1 text-left text-yellow-700 font-semibold">
+                  Avg. Delivery Time (min)
+                </span>
+              </div>
+            </div>
+            {/* Cancelled Orders */}
+            <div className="flex items-start gap-4 justify-center bg-red-50 rounded-lg p-4 shadow">
+              <div className="">
+                <XCircle className="w-14 h-14 text-red-700 mb-2" />
+              </div>
+              <div className="flex flex-col items-start justify-center w-3/5">
+                <span className="text-5xl italic font-bold text-red-700 text-left">
+                  5
+                </span>
+                <span className="text-sm mt-1 text-left text-red-700 font-semibold">
+                  Cancelled Orders in the past month
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+        <OrdersDashboard
+          activeOrders={activeOrders}
+          completedOrders={completedOrders}
+        />
+
+        {/* Add Order Modal */}
+        {isModalOpen && (
+          <AddOrderModal isOpen={isModalOpen} onClose={handleCloseModal} />
+        )}
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
