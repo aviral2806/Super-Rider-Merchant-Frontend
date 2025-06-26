@@ -1,59 +1,141 @@
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
 import { Handshake, Clock, TrendingUp, XCircle } from "lucide-react";
 import BlurText from "@/components/ui/BlurText";
 import { ListPlus } from "lucide-react";
-import { LuListChecks } from "react-icons/lu";
-import { IoNavigateOutline } from "react-icons/io5";
 import OrdersDashboard from "@/components/OrdersDashboard";
-import AddOrderModal from "@/components/AddOrderModal"; // Import the modal component
 import { Navbar1 } from "@/components/navbar1";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Plus, Trash2 } from "lucide-react";
+import useOrderStore from "@/stores/orderStore";
+import toast from "react-hot-toast";
 
 export default function Home() {
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  // Get data and methods from Zustand store
+  const { activeOrders, completedOrders, addOrder } = useOrderStore();
 
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
+  // State for order form
+  const [orderForm, setOrderForm] = useState({
+    pickupLocation: "Om Sweets, Sector 56, Gurgaon",
+    dropLocation: "",
+    customerName: "",
+    customerPhone: "",
+    items: [{ name: "", quantity: 1, price: 0 }],
+  });
+  // Handle order form changes
+  const handleOrderFormChange = (field: string, value: string) => {
+    setOrderForm((prev) => ({ ...prev, [field]: value }));
+  };
 
-  // Mock data for demonstration
-  const activeOrders = [
-    {
-      id: "ORD-001",
-      customerName: "John Doe",
-      items: "2x Pizza, 1x Coke",
-      pickupTime: "2:30 PM",
-      deliveryAddress: "123 Main St",
-      status: "In Transit",
-    },
-    {
-      id: "ORD-002",
-      customerName: "Jane Smith",
-      items: "1x Burger Combo",
-      pickupTime: "3:15 PM",
-      deliveryAddress: "456 Oak Ave",
-      status: "Picked Up",
-    },
-  ];
+  // Handle item changes
+  const handleItemChange = (
+    index: number,
+    field: string,
+    value: string | number
+  ) => {
+    const updatedItems = [...orderForm.items];
+    updatedItems[index] = { ...updatedItems[index], [field]: value };
+    setOrderForm((prev) => ({ ...prev, items: updatedItems }));
+  };
 
-  const completedOrders = [
-    {
-      id: "ORD-003",
-      customerName: "Mike Johnson",
-      items: "3x Sandwiches",
-      completedTime: "Yesterday 6:45 PM",
-      deliveryAddress: "789 Pine St",
-      status: "Delivered",
-    },
-    {
-      id: "ORD-004",
-      customerName: "Sarah Wilson",
-      items: "1x Salad, 2x Drinks",
-      completedTime: "Yesterday 5:20 PM",
-      deliveryAddress: "321 Elm St",
-      status: "Delivered",
-    },
-  ];
+  // Add new item
+  const addItem = () => {
+    setOrderForm((prev) => ({
+      ...prev,
+      items: [...prev.items, { name: "", quantity: 1, price: 0 }],
+    }));
+  };
+
+  // Remove item
+  const removeItem = (index: number) => {
+    if (orderForm.items.length > 1) {
+      const updatedItems = orderForm.items.filter((_, i) => i !== index);
+      setOrderForm((prev) => ({ ...prev, items: updatedItems }));
+    }
+  };
+
+  const orderTotal = (): number => {
+    return orderForm.items.reduce(
+      (acc, i) => acc + Number(i.price) * Number(i.quantity),
+      0
+    );
+  };
+
+  // Submit order
+  const handleSubmitOrder = () => {
+    // Validate form
+    if (!orderForm.pickupLocation) {
+      toast.error("Please enter pickup location", {
+        duration: 3000,
+        icon: "📍",
+      });
+      return;
+    }
+
+    if (!orderForm.dropLocation) {
+      toast.error("Please enter drop location", {
+        duration: 3000,
+        icon: "📍",
+      });
+      return;
+    }
+
+    if (!orderForm.customerName) {
+      toast.error("Please enter customer name", {
+        duration: 3000,
+        icon: "👤",
+      });
+      return;
+    }
+
+    if (!orderForm.customerPhone) {
+      toast.error("Please enter customer phone number", {
+        duration: 3000,
+        icon: "📞",
+      });
+      return;
+    }
+
+    if (orderForm.items.some((item) => !item.name || item.quantity <= 0)) {
+      toast.error("Please fill in all item details correctly", {
+        duration: 3000,
+        icon: "📝",
+      });
+      return;
+    }
+
+    // Add order to store
+    addOrder({
+      pickupLocation: orderForm.pickupLocation,
+      dropLocation: orderForm.dropLocation,
+      customerName: orderForm.customerName,
+      customerPhone: orderForm.customerPhone,
+      items: orderForm.items,
+    });
+
+    console.log("Order submitted:", orderForm);
+
+    // Show success toast
+    toast.success(
+      `Order added successfully! Total: $${orderTotal().toFixed(2)}`,
+      {
+        duration: 4000,
+        icon: "✅",
+      }
+    );
+
+    // Reset form after submission
+    setOrderForm({
+      pickupLocation: "Om Sweets, Sector 56, Gurgaon",
+      dropLocation: "",
+      customerName: "",
+      customerPhone: "",
+      items: [{ name: "", quantity: 1, price: 0 }],
+    });
+  };
+
   const handleAnimationComplete = () => {
     console.log("Animation completed!");
   };
@@ -61,7 +143,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <Navbar1/>
+      <Navbar1 />
       {/* Main Content */}
       <main className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Section */}
@@ -76,21 +158,147 @@ export default function Home() {
                   direction="top"
                   onAnimationComplete={handleAnimationComplete}
                   className="text-2xl text-black font-bold mb-8"
-                  stepDuration={0.3}
+                  stepDuration={0.15}
                 />
               </div>
-              <div className="flex justify-end space-x-4 w-full">
-                <button
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
-                  onClick={handleOpenModal}
+              <div className="w-full space-y-4">
+                {/* Add new order functionality here */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="pickup">Pickup Location</Label>
+                    <Input
+                      id="pickup"
+                      placeholder="Enter pickup location"
+                      value={orderForm.pickupLocation}
+                      onChange={(e) =>
+                        handleOrderFormChange("pickupLocation", e.target.value)
+                      }
+                      required={true}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="drop">Drop Location</Label>
+                    <Input
+                      id="drop"
+                      placeholder="Enter drop location"
+                      value={orderForm.dropLocation}
+                      onChange={(e) =>
+                        handleOrderFormChange("dropLocation", e.target.value)
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="customerName">Customer Name</Label>
+                    <Input
+                      id="customerName"
+                      placeholder="Enter customer name"
+                      value={orderForm.customerName}
+                      onChange={(e) =>
+                        handleOrderFormChange("customerName", e.target.value)
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="customerPhone">Customer Phone</Label>
+                    <Input
+                      id="customerPhone"
+                      placeholder="Enter customer phone"
+                      value={orderForm.customerPhone}
+                      onChange={(e) =>
+                        handleOrderFormChange("customerPhone", e.target.value)
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex w-full justify-between">
+                    <Label>Items</Label>
+                    <Label>Total: ${orderTotal().toFixed(2)}</Label>
+                  </div>
+                  {orderForm.items.map((item, index) => (
+                    <div key={index} className="flex gap-2 items-end">
+                      <div className="flex-1 space-y-2">
+                        <Label className="text-xs text-gray-600">
+                          Item Name
+                        </Label>
+                        <Input
+                          placeholder="Item name"
+                          value={item.name}
+                          onChange={(e) =>
+                            handleItemChange(index, "name", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="w-20 space-y-2">
+                        <Label className="text-xs text-gray-600">Qty</Label>
+                        <Input
+                          type="number"
+                          placeholder="Qty"
+                          value={item.quantity}
+                          onChange={(e) =>
+                            handleItemChange(
+                              index,
+                              "quantity",
+                              Number(e.target.value)
+                            )
+                          }
+                          min="1"
+                        />
+                      </div>
+                      <div className="w-24 space-y-2">
+                        <Label className="text-xs text-gray-600">Price</Label>
+                        <Input
+                          type="number"
+                          placeholder="Price"
+                          value={item.price}
+                          onChange={(e) =>
+                            handleItemChange(
+                              index,
+                              "price",
+                              Number(e.target.value)
+                            )
+                          }
+                          min="0"
+                          step="0.01"
+                        />
+                      </div>
+                      {orderForm.items.length > 1 && (
+                        <div className="">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            onClick={() => removeItem(index)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addItem}
+                    className="w-full"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Item
+                  </Button>
+                </div>
+
+                <Button
+                  onClick={handleSubmitOrder}
+                  className="w-full bg-green-600 hover:bg-green-700"
                 >
-                  <ListPlus className="w-6 h-6 inline-block mr-2" />
-                  Add Order
-                </button>
-                {/* <button className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center">
-                  <LuListChecks className="w-6 h-6 inline-block mr-2" />
-                  View Past Orders
-                </button> */}
+                  <ListPlus className="!w-5 !h-5 inline-block" />
+                  Submit Order
+                </Button>
               </div>
             </div>
           </div>
@@ -102,10 +310,10 @@ export default function Home() {
               </div>
               <div className="flex flex-col items-start justify-center w-3/5">
                 <span className="text-5xl italic font-bold text-blue-700 text-left">
-                  128
+                  {activeOrders.length + completedOrders.length}
                 </span>
                 <span className="text-sm mt-1 text-left text-blue-700 font-semibold">
-                  Orders in Past Week
+                  Total Orders
                 </span>
               </div>
             </div>
@@ -137,17 +345,17 @@ export default function Home() {
                 </span>
               </div>
             </div>
-            {/* Cancelled Orders */}
+            {/* Active Orders */}
             <div className="flex items-start gap-4 justify-center bg-red-50 rounded-lg p-4 shadow">
               <div className="">
                 <XCircle className="w-14 h-14 text-red-700 mb-2" />
               </div>
               <div className="flex flex-col items-start justify-center w-3/5">
                 <span className="text-5xl italic font-bold text-red-700 text-left">
-                  5
+                  {activeOrders.length}
                 </span>
                 <span className="text-sm mt-1 text-left text-red-700 font-semibold">
-                  Cancelled Orders in the past month
+                  Active Orders
                 </span>
               </div>
             </div>
@@ -157,11 +365,6 @@ export default function Home() {
           activeOrders={activeOrders}
           completedOrders={completedOrders}
         />
-
-        {/* Add Order Modal */}
-        {isModalOpen && (
-          <AddOrderModal isOpen={isModalOpen} onClose={handleCloseModal} />
-        )}
       </main>
     </div>
   );

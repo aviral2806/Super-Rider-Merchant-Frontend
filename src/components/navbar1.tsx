@@ -54,16 +54,16 @@ interface Navbar1Props {
 
 const Navbar1 = ({
   logo = {
-    url: "https://www.shadcnblocks.com",
+    url: "http://localhost:3000/",
     src: "/SuperRiderTransparent.png",
     alt: "logo",
     title: "SuperRider",
   },
   menu = [
-    { title: "Home", url: "#" },
+    { title: "Home", url: "/" },
     {
-      title: 'Orders',
-       url: "/orders",
+      title: "Orders",
+      url: "/orders",
     },
     // {
     //   title: "Products",
@@ -149,14 +149,14 @@ const Navbar1 = ({
           <a href={logo.url} className="flex items-center">
             <Image
               src={logo.src}
-              width={75} // Added width
+              width={80} // Added width
               height={70} // Added height
               className=""
               alt={logo.alt}
             />
-            <span className="text-2xl font-bold tracking-tighter">
+            {/* <span className="text-2xl font-bold tracking-tighter">
               {logo.title}
-            </span>
+            </span> */}
           </a>
           <div className="flex items-center">
             <NavigationMenu>
@@ -166,8 +166,7 @@ const Navbar1 = ({
             </NavigationMenu>
           </div>
           <div className="flex gap-2 items-center">
-
-            <Button asChild variant={'outline'} size="sm">
+            <Button asChild variant={"outline"} size="sm">
               <a href={auth.login.url}>{auth.login.title}</a>
             </Button>
           </div>
