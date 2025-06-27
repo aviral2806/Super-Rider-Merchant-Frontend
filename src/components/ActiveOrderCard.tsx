@@ -11,6 +11,9 @@ import {
 } from "@/components/ui/select";
 import toast from "react-hot-toast";
 import useOrderStore from "@/stores/orderStore";
+import { useState } from "react";
+import Modal from "./Modal";
+import OrderTracking from "./OrderTracking";
 
 interface Order {
   id: string;
@@ -43,7 +46,7 @@ const ActiveOrderCard: React.FC<ActiveOrderCardProps> = ({ order }) => {
       case "Preparing":
         return "bg-yellow-100 text-yellow-800";
       case "Waiting for Pickup":
-        return "bg-blue-100 text-blue-800";
+        return "bg-blue-100 text-blue-800 ";
       case "Picked Up":
         return "bg-green-100 text-green-800";
       case "In Transit":
@@ -52,6 +55,8 @@ const ActiveOrderCard: React.FC<ActiveOrderCardProps> = ({ order }) => {
         return "bg-gray-100 text-gray-800";
     }
   };
+
+  const [isTrackingOpen, setIsTrackingOpen] = useState(false);
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-l-orange-500">
@@ -63,7 +68,7 @@ const ActiveOrderCard: React.FC<ActiveOrderCardProps> = ({ order }) => {
             defaultValue={order.status}
           >
             <SelectTrigger
-              className={`w-auto h-auto px-2 py-[-4px] text-xs rounded-full border-none ${getStatusColor(
+              className={`w-auto !h-6 border-none px-2 py-[-4px] text-xs rounded-full ${getStatusColor(
                 order.status
               )} hover:opacity-80 transition-opacity`}
             >
@@ -78,7 +83,7 @@ const ActiveOrderCard: React.FC<ActiveOrderCardProps> = ({ order }) => {
           </Select>
         ) : (
           <span
-            className={`text-xs px-2 py-1 rounded-full ${getStatusColor(
+            className={`text-xs px-2 py-1 h-6 rounded-full border-1 ${getStatusColor(
               order.status
             )}`}
           >
@@ -100,10 +105,17 @@ const ActiveOrderCard: React.FC<ActiveOrderCardProps> = ({ order }) => {
           <span className="font-medium">Address:</span> {order.deliveryAddress}
         </p>
       </div>
-      <button className="mt-4 text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center justify-center border-2 rounded-md px-2 py-1">
+      <button
+        className="mt-4 text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center justify-center 
+        border-2 rounded-md px-2 py-1"
+        onClick={() => setIsTrackingOpen(true)}
+      >
         Track Order
         <IoNavigateOutline className="w-4 h-4 inline-block ml-1" />
       </button>
+      <Modal isOpen={isTrackingOpen} onClose={() => setIsTrackingOpen(false)}>
+        <OrderTracking order={order} />
+      </Modal>
     </div>
   );
 };

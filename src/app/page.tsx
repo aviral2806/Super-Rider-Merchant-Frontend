@@ -217,7 +217,7 @@ export default function Home() {
                 <div className="space-y-3">
                   <div className="flex w-full justify-between">
                     <Label>Items</Label>
-                    <Label>Total: ${orderTotal().toFixed(2)}</Label>
+                    <Label>Total: Rs {orderTotal().toFixed(2)}</Label>
                   </div>
                   {orderForm.items.map((item, index) => (
                     <div key={index} className="flex gap-2 items-end">

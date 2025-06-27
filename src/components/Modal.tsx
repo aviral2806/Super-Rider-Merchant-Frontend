@@ -18,9 +18,40 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
       ></div>
 
       {/* Modal Content */}
-      <div className="relative bg-white rounded-lg shadow-lg p-6 w-full max-w-lg z-10">
+      <div className="relative bg-white rounded-lg shadow-lg p-6 w-full max-h-[90vh] max-w-6xl z-10 overflow-y-auto custom-scrollbar">
         {children}
       </div>
+
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+          border-radius: 3px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(156, 163, 175, 0.3);
+          border-radius: 3px;
+          transition: background 0.2s ease;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(156, 163, 175, 0.6);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:active {
+          background: rgba(156, 163, 175, 0.8);
+        }
+
+        /* Firefox */
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+        }
+      `}</style>
     </div>
   );
 };
