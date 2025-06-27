@@ -19,7 +19,7 @@ export interface Order {
   dropLocation?: string;
   customerPhone?: string;
   itemsList?: Item[];
-  createdAt: string;
+  createdAt?: string;
 }
 
 interface OrderStore {
