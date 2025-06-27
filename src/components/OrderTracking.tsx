@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import type { Order } from "@/stores/orderStore";
 import MapTracker from "./MapTracker";
 import {
@@ -101,7 +101,7 @@ export default function OrderTracking({ order }: OrderTrackingProps) {
             <Clock className="w-4 h-4" />
             <div>
               <p className="font-medium">Order Placed</p>
-              <p>{formatDate(order.createdAt)}</p>
+              <p>{formatDate(order.createdAt ?? "")}</p>
             </div>
           </div>
           {order.pickupTime && (

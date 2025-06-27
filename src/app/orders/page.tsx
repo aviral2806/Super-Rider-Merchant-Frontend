@@ -56,8 +56,8 @@ const OrdersPage = () => {
 
     // Sort by creation time (createdAt)
     filtered.sort((a, b) => {
-      const timeA = new Date(a.createdAt).getTime();
-      const timeB = new Date(b.createdAt).getTime();
+      const timeA = new Date(a.createdAt ?? 0).getTime();
+      const timeB = new Date(b.createdAt ?? 0).getTime();
 
       if (sortOrder === "asc") {
         return timeA - timeB; // Oldest first
