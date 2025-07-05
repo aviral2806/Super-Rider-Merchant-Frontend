@@ -136,21 +136,21 @@ const Navbar1 = ({
     // },
   ],
   auth = {
-    login: { title: "Login", url: "#" },
-    signup: { title: "Sign up", url: "#" },
+    login: { title: "Login", url: "/login" },
+    signup: { title: "Sign up", url: "/signup" },
   },
 }: Navbar1Props) => {
   return (
-    <section className=" border-b-2 px-4">
-      <div className="container">
+    <section className="w-full border-b-2 px-4">
+      <div className=" w-full">
         {/* Desktop Menu */}
         <nav className="hidden justify-between lg:flex">
           {/* Logo */}
           <a href={logo.url} className="flex items-center">
             <Image
               src={logo.src}
-              width={80} // Added width
-              height={70} // Added height
+              width={90} // Added width
+              height={90} // Added height
               className=""
               alt={logo.alt}
             />
@@ -169,6 +169,9 @@ const Navbar1 = ({
             <Button asChild variant={"outline"} size="sm">
               <a href={auth.login.url}>{auth.login.title}</a>
             </Button>
+            <Button asChild>
+              <a href={auth.signup.url}>{auth.signup.title}</a>
+            </Button>
           </div>
         </nav>
 
@@ -179,9 +182,9 @@ const Navbar1 = ({
             <a href={logo.url} className="flex items-center gap-2">
               <Image
                 src={logo.src}
-                width={32} // Added width
-                height={32} // Added height
-                className="max-h-8"
+                width={90} // Added width
+                height={90} // Added height
+                className=""
                 alt={logo.alt}
               />
             </a>
