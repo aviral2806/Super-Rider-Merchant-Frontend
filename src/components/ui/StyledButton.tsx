@@ -5,6 +5,7 @@ interface StyledButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
   className?: string;
+  disabled?: boolean;
 }
 
 export default function StyledButton({
@@ -12,6 +13,7 @@ export default function StyledButton({
   type = "primary",
   onClick,
   className = "",
+  disabled = false,
 }: StyledButtonProps) {
   const primaryClass =
     "w-full bg-primary text-white hover:bg-[#bf442b] transition-colors ";
@@ -24,6 +26,7 @@ export default function StyledButton({
         type === "primary" ? primaryClass : secondaryClass
       } ${className}`}
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
     </Button>
